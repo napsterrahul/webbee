@@ -95,22 +95,9 @@ class MenuController extends BaseController
 
     public function getMenuItems() {
    
-        $menus = MenuItem::where('parent_id',NULL)->get();
-        foreach($menus as $entity){
-
-            // $e['children'] = MenuItem::where('parent_id',$e->id)->get();
-            $entity['children'] = self::children($entity->id);
-        }
+        $menus = MenuItem::tree()->get()->toTree();
         return $menus;
-        // return response()->json($menus);
-        // throw new \Exception('implement in coding task 3');
     }
 
-    public function children($parent){
-        $childrens = MenuItem::where('parent_id',$parent)->get();
-        foreach($childrens as $ch){
-            $ch['children'] = self::children($ch->id);
-        }
-        return $childrens;
-    }
+   
 }

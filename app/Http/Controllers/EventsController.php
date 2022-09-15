@@ -103,11 +103,10 @@ class EventsController extends BaseController
      */
 
     public function getEventsWithWorkshops() {
-        $events = Event::all();
-        foreach($events as $e){
-            // dd($e);
-            $e['workshops'] = Workshop::where('event_id',$e->id)->get();
-        }
+        $events = Event::with('workshops')->get();
+        // foreach($events as $e){
+        //     $e['workshops'] = Workshop::where('event_id',$e->id)->get();
+        // }
         return $events;
         // throw new \Exception('implement in coding task 1');
     }
@@ -188,16 +187,10 @@ class EventsController extends BaseController
      */
 
     public function getFutureEventsWithWorkshops() {
-        $events = Event::all();
-        $array = [];
-        foreach($events as $e){
-            $workshops = Workshop::where('event_id',$e->id)->whereDate('start' ,'>=' ,Carbon::now())->get();
-            
-            $e['workshops'] = $workshops;
-            if(count($workshops) > 0){
-                $array[] = $e; 
-            }
-        }
-        return $array;
+        $events = Event::with('workshops')->whereHas('workshops', function($q)
+        {
+            $q->whereDate('start' ,'>=' ,Carbon::now());
+        })->get();
+        return $events;
     }
 }
