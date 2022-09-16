@@ -104,11 +104,7 @@ class EventsController extends BaseController
 
     public function getEventsWithWorkshops() {
         $events = Event::with('workshops')->get();
-        // foreach($events as $e){
-        //     $e['workshops'] = Workshop::where('event_id',$e->id)->get();
-        // }
         return $events;
-        // throw new \Exception('implement in coding task 1');
     }
 
 
